@@ -11,7 +11,7 @@ Detecting illicit transactions in the Bitcoin network using GNNs on the Elliptic
 
 Financial fraud costs billions annually. Rule-based systems generate 95%+ false positives,
 wasting investigator time. Graph Neural Networks detect fraud patterns invisible to 
-per-transaction models, illicit transactions cluster in the payment network in ways 
+per-transaction models - illicit transactions cluster in the payment network in ways 
 that only emerge when you look at the graph structure.
 
 ## Dataset
@@ -39,9 +39,11 @@ fraud is more costly than investigating alerts.
 
 Fraud is not static. The dataset spans 49 timesteps (~2 weeks each), 
 and fraud rate oscillates between 0% and 35% depending on the period.
-This motivates temporal modeling over static approaches.
+Model performance degrades on later timesteps, confirming that fraud 
+patterns evolve over time and static models have fundamental limitations.
 
 ![Temporal Analysis](assets/temporal_analysis.png)
+![Temporal Generalization](assets/temporal_generalization.png)
 
 ## Graph Structure
 
@@ -53,7 +55,7 @@ suggesting fraudulent transactions avoid highly connected nodes.
 
 ## Graph Visualization
 
-2-hop neighborhood around illicit nodes (timestep 5). Red = illicit, green = licit, gray = unknown.
+1-hop neighborhood around illicit nodes (timestep 5). Red = illicit, green = licit, gray = unknown.
 Illicit nodes tend to cluster together, forming detectable patterns in the transaction network.
 
 ![Graph Visualization](assets/graph_visualization.png)
@@ -63,13 +65,14 @@ Illicit nodes tend to cluster together, forming detectable patterns in the trans
 ```
 bitcoin-fraud-gnn/
 ├── notebooks/
-│   ├── 01_eda.ipynb          # Exploratory data analysis
-│   ├── 02_baseline.ipynb     # Random Forest baseline
-│   ├── 03_gcn.ipynb          # Graph Convolutional Network
-│   └── 04_gat.ipynb          # Graph Attention Network
-├── src/                      # Reusable model code (coming soon)
-├── app/                      # Streamlit demo (coming soon)
-├── assets/                   # Plots and visualizations
+│   ├── 01_eda.ipynb                # Exploratory data analysis
+│   ├── 02_baseline.ipynb           # Random Forest baseline
+│   ├── 03_gcn.ipynb                # Graph Convolutional Network
+│   ├── 04_gat.ipynb                # Graph Attention Network
+│   └── 05_temporal_analysis.ipynb  # Temporal generalization analysis
+├── src/
+│   └── models.py                   # Reusable GCN and GAT definitions
+├── assets/                         # Plots and visualizations
 └── requirements.txt
 ```
 
@@ -80,11 +83,13 @@ bitcoin-fraud-gnn/
   suggesting fraudulent transactions avoid highly connected hubs
 - Temporal split is critical: random split leaks future fraud patterns into training,
   giving artificially inflated results
+- Model performance degrades on later test timesteps, pointing to continual
+  learning as a necessary next step for production fraud detection
 
 ## How to Run
 
 ```bash
-git clone https://github.com/TU_USUARIO/bitcoin-fraud-gnn.git
+git clone https://github.com/linovives/bitcoin-fraud-gnn.git
 cd bitcoin-fraud-gnn
 python -m venv venv
 source venv/bin/activate
@@ -94,5 +99,5 @@ jupyter lab
 
 ## Author
 
-**Lino Vives** - Mathematics & Software Engineering student at U-Tad  
-[LinkedIn](https://linkedin.com/in/lino-vives) 
+**Lino Vives** - Mathematics & Software Engineering student  
+[LinkedIn](https://linkedin.com/in/lino-vives)
